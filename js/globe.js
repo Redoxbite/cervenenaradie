@@ -7,74 +7,184 @@ let renderer;
 let scene;
 let camera;
 let globe;
+let globeMat;
 let atmosphere;
 let animId = 0;
 let running = false;
+let startTime = 0;
 
 function prefersReducedMotion() {
   return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 }
 
-function createGlobeTexture() {
-  // Equirectangular: at the equator, 1px X ≈ 1px Y in angle — text stays unstretched
-  const w = 2048;
-  const h = 1024;
-  const c = document.createElement("canvas");
-  c.width = w;
-  c.height = h;
-  const ctx = c.getContext("2d");
-
-  ctx.fillStyle = "#5c0812";
-  ctx.fillRect(0, 0, w, h);
-
-  const poles = ctx.createLinearGradient(0, 0, 0, h);
-  poles.addColorStop(0, "rgba(0, 0, 0, 0.35)");
-  poles.addColorStop(0.35, "rgba(0, 0, 0, 0)");
-  poles.addColorStop(0.65, "rgba(0, 0, 0, 0)");
-  poles.addColorStop(1, "rgba(0, 0, 0, 0.4)");
-  ctx.fillStyle = poles;
-  ctx.fillRect(0, 0, w, h);
-
-  ctx.strokeStyle = "rgba(255, 205, 215, 0.11)";
-  ctx.lineWidth = 1.5;
-  for (let i = 1; i < 5; i += 1) {
-    const y = (i / 5) * h;
-    ctx.beginPath();
-    ctx.moveTo(0, y);
-    ctx.lineTo(w, y);
-    ctx.stroke();
-  }
-
-  const eqY = h * 0.5;
-  ctx.strokeStyle = "rgba(255, 220, 230, 0.2)";
-  ctx.lineWidth = 2;
-  ctx.beginPath();
-  ctx.moveTo(0, eqY);
-  ctx.lineTo(w, eqY);
-  ctx.stroke();
-
-  // Two opposite phrases — one in front, one behind, never stacked
-  const phrase = "WORLD OF SOLUTIONS";
-  ctx.font = "700 56px Outfit, system-ui, sans-serif";
-  ctx.textAlign = "center";
-  ctx.textBaseline = "middle";
-  ctx.fillStyle = "#ffffff";
-  ctx.strokeStyle = "rgba(20, 0, 4, 0.6)";
-  ctx.lineWidth = 6;
-
-  for (let i = 0; i < 2; i += 1) {
-    const x = (i + 0.5) * (w / 2);
-    ctx.strokeText(phrase, x, eqY);
-    ctx.fillText(phrase, x, eqY);
-  }
-
-  const tex = new THREE.CanvasTexture(c);
-  tex.colorSpace = THREE.SRGBColorSpace;
-  tex.needsUpdate = true;
-  return tex;
+function loadImage(src) {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    img.decoding = "async";
+    img.onload = () => resolve(img);
+    img.onerror = reject;
+    img.src = src;
+  });
 }
 
-function buildScene() {
+function hash2(x, y) {
+  const n = Math.sin(x * 127.1 + y * 311.7) * 43758.5453;
+  return n - Math.floor(n);
+}
+
+async function createNightMaps() {
+  const w = 2048;
+  const h = 1024;
+  const base = document.createElement("canvas");
+  base.width = w;
+  base.height = h;
+  const bctx = base.getContext("2d", { willReadFrequently: true });
+
+  const glow = document.createElement("canvas");
+  glow.width = w;
+  glow.height = h;
+  const gctx = glow.getContext("2d");
+
+  const img = await loadImage("images/earth-map.jpg");
+  bctx.drawImage(img, 0, 0, w, h);
+
+  const frame = bctx.getImageData(0, 0, w, h);
+  const data = frame.data;
+  const land = new Uint8Array(w * h);
+
+  for (let p = 0, i = 0; p < land.length; p += 1, i += 4) {
+    const r = data[i];
+    const g = data[i + 1];
+    const b = data[i + 2];
+    const isOcean = b > r + 12 && b > g + 4 && b > 70;
+    const isDeepWater = b > r && b > g && r < 60 && g < 90;
+    land[p] = isOcean || isDeepWater ? 0 : 1;
+  }
+
+  for (let y = 0; y < h; y += 1) {
+    for (let x = 0; x < w; x += 1) {
+      const p = y * w + x;
+      const i = p * 4;
+      const lum = (data[i] * 0.3 + data[i + 1] * 0.5 + data[i + 2] * 0.2) / 255;
+      const polar = Math.abs(y / h - 0.5) * 2;
+      const poleShade = 1 - polar * 0.2;
+
+      let edge = 0;
+      if (land[p]) {
+        const l = land[y * w + ((x - 1 + w) % w)];
+        const r = land[y * w + ((x + 1) % w)];
+        const u = land[Math.max(0, y - 1) * w + x];
+        const d = land[Math.min(h - 1, y + 1) * w + x];
+        if (!l || !r || !u || !d) edge = 1;
+      }
+
+      if (!land[p]) {
+        const dpt = (0.9 + lum * 0.15) * poleShade;
+        data[i] = Math.round(34 * dpt);
+        data[i + 1] = Math.round(38 * dpt);
+        data[i + 2] = Math.round(48 * dpt);
+      } else {
+        const dpt = (0.84 + lum * 0.22) * poleShade;
+        data[i] = Math.round(58 * dpt);
+        data[i + 1] = Math.round(28 * dpt);
+        data[i + 2] = Math.round(36 * dpt);
+        if (edge) {
+          data[i] = Math.round(118 * poleShade);
+          data[i + 1] = Math.round(42 * poleShade);
+          data[i + 2] = Math.round(54 * poleShade);
+        }
+      }
+    }
+  }
+  bctx.putImageData(frame, 0, 0);
+
+  const shine = bctx.createRadialGradient(w * 0.34, h * 0.28, 0, w * 0.34, h * 0.28, h * 0.4);
+  shine.addColorStop(0, "rgba(255, 255, 255, 0.16)");
+  shine.addColorStop(0.4, "rgba(255, 190, 205, 0.05)");
+  shine.addColorStop(1, "rgba(0, 0, 0, 0)");
+  bctx.fillStyle = shine;
+  bctx.fillRect(0, 0, w, h);
+
+  gctx.fillStyle = "#000";
+  gctx.fillRect(0, 0, w, h);
+
+  for (let y = 1; y < h; y += 2) {
+    for (let x = 1; x < w; x += 2) {
+      const p = y * w + x;
+      if (!land[p]) continue;
+      const l = land[y * w + ((x - 1 + w) % w)];
+      const r = land[y * w + ((x + 1) % w)];
+      const u = land[Math.max(0, y - 1) * w + x];
+      const d = land[Math.min(h - 1, y + 1) * w + x];
+      const coastal = !l || !r || !u || !d ? 1 : 0;
+      const n = hash2(x * 0.41, y * 0.67);
+      const n2 = hash2(x * 2.1, y * 1.7);
+      const threshold = coastal ? 0.2 + n2 * 0.16 : 0.07 + n2 * 0.07;
+      if (n > threshold) continue;
+      const bright = 175 + Math.floor(n2 * 80);
+      gctx.fillStyle = `rgb(${bright}, ${28 + Math.floor(n * 30)}, ${42 + Math.floor(n2 * 28)})`;
+      gctx.fillRect(x, y, coastal || n2 > 0.7 ? 2 : 1, coastal || n2 > 0.7 ? 2 : 1);
+    }
+  }
+
+  gctx.globalCompositeOperation = "lighter";
+  for (let y = 5; y < h; y += 5) {
+    for (let x = 5; x < w; x += 5) {
+      if (!land[y * w + x]) continue;
+      const n = hash2(x * 0.19, y * 0.33);
+      if (n > 0.3) continue;
+      const rad = 5 + n * 10;
+      const grd = gctx.createRadialGradient(x, y, 0, x, y, rad);
+      grd.addColorStop(0, `rgba(255, 140, 155, ${0.3 + n * 0.35})`);
+      grd.addColorStop(0.5, `rgba(210, 18, 40, ${0.14 + n * 0.16})`);
+      grd.addColorStop(1, "rgba(100, 0, 12, 0)");
+      gctx.fillStyle = grd;
+      gctx.beginPath();
+      gctx.arc(x, y, rad, 0, Math.PI * 2);
+      gctx.fill();
+    }
+  }
+
+  const metros = [
+    [0.21, 0.31], [0.24, 0.35], [0.27, 0.33],
+    [0.29, 0.57], [0.5, 0.25], [0.52, 0.27], [0.54, 0.26],
+    [0.56, 0.4], [0.72, 0.3], [0.78, 0.34], [0.81, 0.36],
+    [0.84, 0.66], [0.63, 0.37],
+  ];
+  metros.forEach(([nx, ny], idx) => {
+    const x = nx * w;
+    const y = ny * h;
+    const rad = 18 + (idx % 3) * 6;
+    const grd = gctx.createRadialGradient(x, y, 0, x, y, rad);
+    grd.addColorStop(0, "rgba(255, 235, 240, 0.92)");
+    grd.addColorStop(0.2, "rgba(255, 65, 85, 0.7)");
+    grd.addColorStop(0.55, "rgba(180, 8, 28, 0.28)");
+    grd.addColorStop(1, "rgba(70, 0, 10, 0)");
+    gctx.fillStyle = grd;
+    gctx.beginPath();
+    gctx.arc(x, y, rad, 0, Math.PI * 2);
+    gctx.fill();
+  });
+  gctx.globalCompositeOperation = "source-over";
+
+  bctx.globalCompositeOperation = "lighter";
+  bctx.globalAlpha = 0.94;
+  bctx.drawImage(glow, 0, 0);
+  bctx.globalAlpha = 1;
+  bctx.globalCompositeOperation = "source-over";
+
+  const colorMap = new THREE.CanvasTexture(base);
+  colorMap.colorSpace = THREE.SRGBColorSpace;
+  colorMap.needsUpdate = true;
+
+  const emissiveMap = new THREE.CanvasTexture(glow);
+  emissiveMap.colorSpace = THREE.SRGBColorSpace;
+  emissiveMap.needsUpdate = true;
+
+  return { colorMap, emissiveMap };
+}
+
+async function buildScene() {
   const w = canvas.clientWidth || 96;
   const h = canvas.clientHeight || 96;
 
@@ -90,43 +200,43 @@ function buildScene() {
   renderer.setClearColor(0x000000, 0);
   renderer.outputColorSpace = THREE.SRGBColorSpace;
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
-  renderer.toneMappingExposure = 1.08;
+  renderer.toneMappingExposure = 1.18;
 
   scene = new THREE.Scene();
   camera = new THREE.PerspectiveCamera(30, w / h, 0.1, 40);
   camera.position.set(0, 0, 3.12);
 
-  scene.add(new THREE.AmbientLight(0xffeef0, 0.62));
-  const key = new THREE.DirectionalLight(0xffffff, 1.05);
-  key.position.set(2.2, 2.4, 3);
-  const fill = new THREE.DirectionalLight(0xff8a98, 0.28);
-  fill.position.set(-2.4, -0.2, 1.8);
-  const rim = new THREE.DirectionalLight(0xff1a35, 0.55);
-  rim.position.set(-1.2, 0.6, -2.6);
-  scene.add(key, fill, rim);
+  scene.add(new THREE.AmbientLight(0xd0d5e0, 0.52));
+  const key = new THREE.DirectionalLight(0xffffff, 0.75);
+  key.position.set(2.4, 2.5, 3.1);
+  const rim = new THREE.DirectionalLight(0xff4560, 0.5);
+  rim.position.set(-1.8, 0.5, -2.3);
+  scene.add(key, rim);
 
   globe = new THREE.Group();
   scene.add(globe);
 
-  globe.add(
-    new THREE.Mesh(
-      new THREE.SphereGeometry(1, 64, 64),
-      new THREE.MeshStandardMaterial({
-        map: createGlobeTexture(),
-        metalness: 0.22,
-        roughness: 0.38,
-        emissive: 0x2a050a,
-        emissiveIntensity: 0.14,
-      })
-    )
-  );
+  const { colorMap, emissiveMap } = await createNightMaps();
+  const maxAniso = renderer.capabilities?.getMaxAnisotropy?.() || 4;
+  colorMap.anisotropy = Math.min(8, maxAniso);
+  emissiveMap.anisotropy = Math.min(8, maxAniso);
+
+  globeMat = new THREE.MeshStandardMaterial({
+    map: colorMap,
+    emissiveMap,
+    emissive: 0xffffff,
+    emissiveIntensity: 1.45,
+    metalness: 0.12,
+    roughness: 0.55,
+  });
+  globe.add(new THREE.Mesh(new THREE.SphereGeometry(1, 96, 96), globeMat));
 
   atmosphere = new THREE.Mesh(
-    new THREE.SphereGeometry(1.04, 48, 48),
+    new THREE.SphereGeometry(1.045, 48, 48),
     new THREE.MeshBasicMaterial({
-      color: 0xff3d58,
+      color: 0xff6174,
       transparent: true,
-      opacity: 0.1,
+      opacity: 0.12,
       side: THREE.BackSide,
       depthWrite: false,
     })
@@ -155,11 +265,17 @@ function animate(now) {
   animId = requestAnimationFrame(animate);
   if (document.hidden) return;
 
+  if (!startTime) startTime = now;
   const t = now * 0.001;
-  globe.rotation.y = t * 0.38;
-  globe.rotation.x = Math.sin(t * 0.18) * 0.03;
+
+  globe.rotation.y = t * 0.28;
+  globe.rotation.x = Math.sin(t * 0.14) * 0.02;
+
+  if (globeMat) {
+    globeMat.emissiveIntensity = 1.35 + Math.sin(t * 1.1) * 0.1;
+  }
   if (atmosphere) {
-    atmosphere.material.opacity = 0.09 + Math.sin(t * 0.7) * 0.015;
+    atmosphere.material.opacity = 0.1 + Math.sin(t * 0.55) * 0.02;
   }
 
   renderer.render(scene, camera);
@@ -189,9 +305,9 @@ function init() {
     return;
   }
 
-  const boot = () => {
+  const boot = async () => {
     try {
-      buildScene();
+      await buildScene();
       onResize();
       syncScrollScale();
       window.addEventListener("resize", onResize);
