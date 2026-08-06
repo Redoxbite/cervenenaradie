@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="sk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Červené Náradie — Profesionálne náradie</title>
+  <meta name="description" content="Autorizovaný predajca Milwaukee, YATO, FLEX, FEIN & Chicago Pneumatic. Predajňa Nitra.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Outfit:wght@300;400;500;600;700&family=Pacifico&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <div class="site is-visible" id="site">
+    <a class="skip-link" href="#main">Prejsť na obsah</a>
+
+    <header class="header">
+      <div class="header__top">
+        <div class="header__top-inner">
+          <div class="header__contacts">
+            <a href="tel:+421905314101">+421 905 314 101</a>
+            <a href="mailto:info@cervenenaradie.sk">info@cervenenaradie.sk</a>
+          </div>
+          <nav class="header__top-nav" aria-label="Rýchle odkazy">
+            <a href="#kontakty">Kontakty</a>
+            <a href="#predajna">Predajňa</a>
+          </nav>
+        </div>
+      </div>
+
+      <div class="header__main">
+        <div class="header__main-inner">
+          <a class="logo" href="/" aria-label="Červené Náradie — domov">
+            <span class="logo-globe" id="globe-stage" aria-hidden="true">
+              <canvas id="globe-canvas"></canvas>
+            </span>
+          </a>
+
+          <form class="search" role="search" action="#" method="get">
+            <label class="visually-hidden" for="search-input">Vyhľadávanie</label>
+            <input id="search-input" type="search" name="q" placeholder="Napíšte, čo hľadáte" required>
+            <button type="submit" class="search__btn">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2"/>
+                <path d="M20 20l-3.5-3.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+              </svg>
+              Hľadať
+            </button>
+          </form>
+
+          <div class="header__actions">
+            <a class="header__action" href="#prihlasenie">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <circle cx="12" cy="8" r="3.5" stroke="currentColor" stroke-width="1.8"/>
+                <path d="M5 19c1.5-3 4-4.5 7-4.5s5.5 1.5 7 4.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+              </svg>
+              Prihlásenie
+            </a>
+            <a class="header__action header__cart" href="#kosik" id="cart-link">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path d="M6 8h12l-1 11H7L6 8z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>
+                <path d="M9 8V7a3 3 0 016 0v1" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+              </svg>
+              <span id="cart-label">Prázdny košík</span>
+              <span class="cart-badge" id="cart-badge" hidden>0</span>
+            </a>
+          </div>
+
+          <button type="button" class="nav-toggle" id="nav-toggle" aria-expanded="false" aria-controls="brand-nav">
+            <span class="visually-hidden">Menu</span>
+            <span></span><span></span><span></span>
+          </button>
+        </div>
+      </div>
+
+      <nav class="brand-nav" id="brand-nav" aria-label="Značky">
+        <div class="brand-nav__inner">
+          <a href="#milwaukee">Milwaukee</a>
+          <a href="#yato">YATO</a>
+          <a href="#flex">FLEX</a>
+          <a href="#fein">FEIN</a>
+          <a href="#chicago">Chicago Pneumatic</a>
+          <a href="#kstools">KS TOOLS</a>
+          <a class="brand-nav__outlet" href="#outlet">OUTLET</a>
+        </div>
+      </nav>
+    </header>
+
+    <main id="main">
+      <section class="hero" aria-label="Akcie">
+        <div class="hero__track" id="hero-track">
+          <article class="hero__slide is-active">
+            <div class="hero__media hero__media--workshop">
+              <img src="images/banners/hero-workshop.jpg" alt="Dielenské vybavenie KS Tools" width="1774" height="887">
+            </div>
+            <div class="hero__content">
+              <p class="hero__eyebrow">Autorizovaný predajca</p>
+              <h1 class="hero__title">
+                <span>DIELENSKÉ</span>
+                <span class="hero__title-accent">VYBAVENIE</span>
+              </h1>
+              <p class="hero__text">Profesionálne vozíky, skrine a náradie pre dielne a autoservisy.</p>
+              <a class="btn btn--light" href="#znacky">Vybrať značku</a>
+            </div>
+          </article>
+          <article class="hero__slide">
+            <div class="hero__media hero__media--milwaukee">
+              <img src="images/brands/milwaukee.jpg" alt="Milwaukee náradie" width="1254" height="1254">
+            </div>
+            <div class="hero__content">
+              <p class="hero__eyebrow">Letná akcia</p>
+              <h2 class="hero__title">
+                <span>MILWAUKEE</span>
+                <span class="hero__title-accent">AKU SYSTÉMY</span>
+              </h2>
+              <p class="hero__text">M12 &amp; M18 — stovky strojov na jednej batériovej platforme.</p>
+              <a class="btn btn--light" href="#milwaukee">Pozrieť Milwaukee</a>
+            </div>
+          </article>
+          <article class="hero__slide">
+            <div class="hero__media hero__media--outlet">
+              <img src="images/banners/hero-batteries.jpg" alt="Milwaukee akumulátory" width="1600" height="800">
+            </div>
+            <div class="hero__content">
+              <p class="hero__eyebrow">Najnižšie ceny</p>
+              <h2 class="hero__title">
+                <span>OUTLET</span>
+                <span class="hero__title-accent">M12 &amp; M18</span>
+              </h2>
+              <p class="hero__text">Nové náradie bez kufra a originálneho balenia — lacnejšie.</p>
+              <a class="btn btn--light" href="#outlet">Do outletu</a>
+            </div>
+          </article>
+        </div>
+        <div class="hero__controls">
+          <button type="button" class="hero__dot is-active" data-slide="0" aria-label="Snímok 1"></button>
+          <button type="button" class="hero__dot" data-slide="1" aria-label="Snímok 2"></button>
+          <button type="button" class="hero__dot" data-slide="2" aria-label="Snímok 3"></button>
+        </div>
+      </section>
+
+      <section class="section brands" id="znacky">
+        <div class="section__inner">
+          <header class="section__head">
+            <h2 class="section__title">Vyberte si podľa značky</h2>
+            <p class="section__lead">Profesionáli si vyberú — autorizovaný predaj s poradenstvom v Nitre.</p>
+          </header>
+          <ul class="brands__grid">
+            <li>
+              <a class="brand-card" href="#milwaukee" id="milwaukee">
+                <img class="brand-card__img" src="images/brands/milwaukee.jpg" alt="Milwaukee" width="400" height="400">
+                <span class="brand-card__name">Milwaukee</span>
+                <span class="brand-card__desc">Systémy M12 &amp; M18</span>
+              </a>
+            </li>
+            <li>
+              <a class="brand-card" href="#yato" id="yato">
+                <img class="brand-card__img" src="images/brands/yato.jpg" alt="YATO" width="400" height="400">
+                <span class="brand-card__name">YATO</span>
+                <span class="brand-card__desc">Výkon za rozumnú cenu</span>
+              </a>
+            </li>
+            <li>
+              <a class="brand-card" href="#flex" id="flex">
+                <img class="brand-card__img" src="images/brands/flex.jpg" alt="FLEX" width="400" height="400">
+                <span class="brand-card__name">FLEX</span>
+                <span class="brand-card__desc">Nemecká kvalita</span>
+              </a>
+            </li>
+            <li>
+              <a class="brand-card" href="#fein" id="fein">
+                <img class="brand-card__img" src="images/brands/fein.jpg" alt="FEIN" width="400" height="400">
+                <span class="brand-card__name">FEIN</span>
+                <span class="brand-card__desc">Špecialista na kov</span>
+              </a>
+            </li>
+            <li>
+              <a class="brand-card" href="#chicago" id="chicago">
+                <img class="brand-card__img" src="images/brands/chicago.jpg" alt="Chicago Pneumatic" width="400" height="400">
+                <span class="brand-card__name">Chicago Pneumatic</span>
+                <span class="brand-card__desc">Pneumatické náradie</span>
+              </a>
+            </li>
+            <li>
+              <a class="brand-card brand-card--outlet" href="#outlet" id="outlet">
+                <img class="brand-card__img" src="images/brands/outlet.jpg" alt="Outlet" width="400" height="400">
+                <span class="brand-card__name">OUTLET</span>
+                <span class="brand-card__desc">Najnižšie ceny</span>
+              </a>
+            </li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="section products" id="akcie">
+        <div class="section__inner">
+          <header class="section__head section__head--row">
+            <div>
+              <h2 class="section__title">Akčný tovar</h2>
+              <p class="section__lead">TOP ponuky — skladom, pripravené na odoslanie.</p>
+            </div>
+            <a class="link-arrow" href="#akcie">Všetky akcie</a>
+          </header>
+
+          <div class="products__grid">
+            <article class="product">
+              <div class="product__badges">
+                <span class="badge badge--sale">Akcia</span>
+                <span class="badge badge--new">Novinka</span>
+              </div>
+              <div class="product__visual">
+                <img src="images/products/m12-blidrc.jpg" alt="Milwaukee M12 BLIDRC-S" width="400" height="400">
+              </div>
+              <h3 class="product__name">Milwaukee M12 BLIDRC-S</h3>
+              <p class="product__meta">Skladom (&gt;5 ks)</p>
+              <p class="product__price">
+                <span class="product__price-vat">€99,92 bez DPH</span>
+                <strong>€122,90</strong>
+              </p>
+              <button type="button" class="btn btn--cart" data-product="Milwaukee M12 BLIDRC-S" data-price="122.90">Do košíka</button>
+            </article>
+
+            <article class="product">
+              <div class="product__badges">
+                <span class="badge badge--sale">Akcia</span>
+                <span class="badge badge--tip">Tip</span>
+              </div>
+              <div class="product__visual">
+                <img src="images/products/yato-cart.webp" alt="YATO dielenský vozík" width="400" height="400">
+              </div>
+              <h3 class="product__name">YATO dielenský vozík 185 dielov</h3>
+              <p class="product__meta">Skladom (&gt;5 ks)</p>
+              <p class="product__price">
+                <span class="product__price-vat">€386,18 bez DPH</span>
+                <strong>€475</strong>
+              </p>
+              <button type="button" class="btn btn--cart" data-product="YATO YT-55307" data-price="475">Do košíka</button>
+            </article>
+
+            <article class="product">
+              <div class="product__badges">
+                <span class="badge badge--sale">–57 %</span>
+                <span class="badge badge--tip">Tip</span>
+              </div>
+              <div class="product__visual">
+                <img src="images/products/cp7732c.webp" alt="Chicago Pneumatic CP7732C" width="400" height="400">
+              </div>
+              <h3 class="product__name">Chicago Pneumatic CP7732C</h3>
+              <p class="product__meta">Skladom (2 ks)</p>
+              <p class="product__price">
+                <span class="product__old">€444,19</span>
+                <span class="product__price-vat">€155,28 bez DPH</span>
+                <strong>€191</strong>
+              </p>
+              <button type="button" class="btn btn--cart" data-product="CP7732C" data-price="191">Do košíka</button>
+            </article>
+
+            <article class="product">
+              <div class="product__badges">
+                <span class="badge badge--sale">Akcia</span>
+                <span class="badge badge--clearance">Výpredaj</span>
+              </div>
+              <div class="product__visual">
+                <img src="images/products/m18-fiw2f12.png" alt="Milwaukee M18 FIW2F12-S" width="400" height="400">
+              </div>
+              <h3 class="product__name">Milwaukee M18 FIW2F12-S</h3>
+              <p class="product__meta">Skladom (&gt;5 ks)</p>
+              <p class="product__price">
+                <span class="product__price-vat">€169 bez DPH</span>
+                <strong>€207,87</strong>
+              </p>
+              <button type="button" class="btn btn--cart" data-product="M18 FIW2F12-S" data-price="207.87">Do košíka</button>
+            </article>
+
+            <article class="product">
+              <div class="product__badges">
+                <span class="badge badge--sale">Akcia</span>
+              </div>
+              <div class="product__visual">
+                <img src="images/products/m18-fsz.png" alt="Milwaukee M18 FSZ-S" width="400" height="400">
+              </div>
+              <h3 class="product__name">Milwaukee M18 FSZ-S</h3>
+              <p class="product__meta">Skladom (&gt;5 ks)</p>
+              <p class="product__price">
+                <span class="product__price-vat">€223,58 bez DPH</span>
+                <strong>€275</strong>
+              </p>
+              <button type="button" class="btn btn--cart" data-product="M18 FSZ-S" data-price="275">Do košíka</button>
+            </article>
+
+            <article class="product">
+              <div class="product__badges">
+                <span class="badge badge--new">Novinka</span>
+              </div>
+              <div class="product__visual">
+                <img src="images/products/m12-blpp2d.webp" alt="Milwaukee M12 BLPP2D-202B" width="400" height="400">
+              </div>
+              <h3 class="product__name">Milwaukee M12 BLPP2D-202B</h3>
+              <p class="product__meta">Skladom (&gt;5 ks)</p>
+              <p class="product__price">
+                <span class="product__old">€306,26</span>
+                <span class="product__price-vat">€223,58 bez DPH</span>
+                <strong>€275</strong>
+              </p>
+              <button type="button" class="btn btn--cart" data-product="M12 BLPP2D-202B" data-price="275">Do košíka</button>
+            </article>
+
+            <article class="product">
+              <div class="product__badges">
+                <span class="badge badge--tip">Tip</span>
+              </div>
+              <div class="product__visual">
+                <img src="images/products/yato-blower.webp" alt="YATO YT-82938 mini turbo fukár" width="400" height="400">
+              </div>
+              <h3 class="product__name">YATO YT-82938 mini turbo fukár</h3>
+              <p class="product__meta">Skladom (&gt;5 ks)</p>
+              <p class="product__price">
+                <span class="product__old">€41,63</span>
+                <span class="product__price-vat">€21,06 bez DPH</span>
+                <strong>€25,90</strong>
+              </p>
+              <button type="button" class="btn btn--cart" data-product="YT-82938" data-price="25.90">Do košíka</button>
+            </article>
+
+            <article class="product">
+              <div class="product__badges">
+                <span class="badge badge--sale">–53 %</span>
+              </div>
+              <div class="product__visual">
+                <img src="images/products/m18-battery.png" alt="MILWAUKEE M18 5.0 Ah" width="400" height="400">
+              </div>
+              <h3 class="product__name">MILWAUKEE M18™ 5.0 Ah</h3>
+              <p class="product__meta">Skladom (&gt;5 ks)</p>
+              <p class="product__price">
+                <span class="product__price-vat">€67,07 bez DPH</span>
+                <strong>€82,50</strong>
+              </p>
+              <button type="button" class="btn btn--cart" data-product="M18 5.0Ah" data-price="82.50">Do košíka</button>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="section about">
+        <div class="section__inner about__grid">
+          <div class="about__copy">
+            <p class="section__eyebrow">Červené-náradie.sk</p>
+            <h2 class="section__title">Profesionálne náradie Milwaukee, YATO, FLEX, FEIN &amp; Chicago Pneumatic</h2>
+            <p class="about__text">
+              Sme autorizovaný predajca profesionálneho náradia pre remeselníkov, dielne aj priemysel.
+              Vyberajte online alebo si náradie vyskúšajte naživo v našej predajni v Nitre.
+            </p>
+            <div class="about__cta">
+              <a class="btn" href="#predajna">Navštíviť predajňu</a>
+              <a class="btn btn--ghost" href="tel:+421905314101">+421 905 314 101</a>
+            </div>
+          </div>
+          <aside class="about__panel">
+            <p><strong>Novozámocká 911/161A</strong><br>949 05 Nitra</p>
+            <p>Po – Pia: 8:00 – 17:00<br>So: 8:00 – 12:00</p>
+            <a href="mailto:info@cervenenaradie.sk">info@cervenenaradie.sk</a>
+          </aside>
+        </div>
+      </section>
+
+      <section class="section perks">
+        <div class="section__inner">
+          <header class="section__head">
+            <h2 class="section__title">Prečo nakupovať u nás</h2>
+            <p class="section__lead">Jasné výhody — bez zbytočného šumu.</p>
+          </header>
+          <ul class="perks__grid">
+            <li class="perk">
+              <h3 class="perk__title">Garancia doručenia</h3>
+              <p>Nepoškodeného tovaru — náradie starostlivo balíme.</p>
+            </li>
+            <li class="perk">
+              <h3 class="perk__title">Darček zdarma</h3>
+              <p>Ku každej objednávke pridávame malú pozornosť.</p>
+            </li>
+            <li class="perk">
+              <h3 class="perk__title">Cez 3000 výdajných miest</h3>
+              <p>Vyzdvihnutie po celom Slovensku, ako vám to vyhovuje.</p>
+            </li>
+            <li class="perk">
+              <h3 class="perk__title">Doručenie do druhého dňa</h3>
+              <p>Skladové položky doručujeme expresne na akúkoľvek adresu.</p>
+            </li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="section store" id="predajna">
+        <div class="section__inner store__grid">
+          <div class="store__media">
+            <img src="images/store/interior.jpg" alt="Predajňa Červené Náradie Nitra" width="900" height="1200">
+          </div>
+          <div class="store__copy">
+            <p class="section__eyebrow">Predajňa</p>
+            <h2 class="section__title">Pozývame vás do predajne — Nitra</h2>
+            <p>
+              Náradie si u nás môžete pozrieť, chytiť a vyskúšať naživo.
+              Poradíme s výberom, pomôžeme so servisom aj s registráciou predĺženej záruky.
+            </p>
+            <dl class="store__meta">
+              <div>
+                <dt>Adresa</dt>
+                <dd>Novozámocká 911/161A, 949 05 Nitra</dd>
+              </div>
+              <div>
+                <dt>Otváracie hodiny</dt>
+                <dd>Po–Pia 8:00–17:00 · So 8:00–12:00</dd>
+              </div>
+              <div>
+                <dt>Telefón</dt>
+                <dd><a href="tel:+421905314101">+421 905 314 101</a></dd>
+              </div>
+            </dl>
+          </div>
+        </div>
+      </section>
+
+      <section class="section news">
+        <div class="section__inner">
+          <header class="section__head">
+            <h2 class="section__title">Nové články</h2>
+            <p class="section__lead">Akcie, tipy a novinky zo sveta náradia.</p>
+          </header>
+          <div class="news__grid">
+            <article class="news-card">
+              <p class="news-card__tag">Akcia</p>
+              <h3 class="news-card__title">Akumulátor za 1 EUR — letná akcia Milwaukee</h3>
+              <p>Pri nákupe vybraných strojov získate akumulátor Milwaukee za symbolické euro.</p>
+              <a class="link-arrow" href="#">Čítať článok</a>
+            </article>
+            <article class="news-card">
+              <p class="news-card__tag">Tip</p>
+              <h3 class="news-card__title">Milwaukee výkonné AKU stroje</h3>
+              <p>Prehľad M12 a M18 platformy — čo sa oplatí mať v dielni.</p>
+              <a class="link-arrow" href="#">Čítať článok</a>
+            </article>
+            <article class="news-card">
+              <p class="news-card__tag">Dielňa</p>
+              <h3 class="news-card__title">Vybavenie dielne</h3>
+              <p>Od vozíkov po skrine — ako poskladať funkčnú dielňu.</p>
+              <a class="link-arrow" href="#">Čítať článok</a>
+            </article>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer" id="kontakty">
+      <div class="footer__inner">
+        <div class="footer__brand">
+          <a class="logo logo--footer" href="/">
+            <img class="logo__img" src="images/logo.png" alt="Červené Náradie" width="160" height="73">
+          </a>
+          <p>Autorizovaný predajca profesionálneho náradia.</p>
+        </div>
+        <div class="footer__cols">
+          <div>
+            <h3>Značky</h3>
+            <ul>
+              <li><a href="#milwaukee">Milwaukee</a></li>
+              <li><a href="#yato">YATO</a></li>
+              <li><a href="#flex">FLEX</a></li>
+              <li><a href="#fein">FEIN</a></li>
+              <li><a href="#chicago">Chicago Pneumatic</a></li>
+            </ul>
+          </div>
+          <div>
+            <h3>Obchod</h3>
+            <ul>
+              <li><a href="#predajna">Predajňa</a></li>
+              <li><a href="#akcie">Akcie</a></li>
+              <li><a href="#outlet">Outlet</a></li>
+              <li><a href="#kontakty">Kontakty</a></li>
+            </ul>
+          </div>
+          <div>
+            <h3>Kontakt</h3>
+            <ul>
+              <li><a href="tel:+421905314101">+421 905 314 101</a></li>
+              <li><a href="mailto:info@cervenenaradie.sk">info@cervenenaradie.sk</a></li>
+              <li>Novozámocká 911/161A<br>949 05 Nitra</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="footer__bar">
+        <p>© <span id="year"></span> Červené Náradie. Demo pre GitHub Pages.</p>
+      </div>
+    </footer>
+  </div>
+
+  <div class="toast" id="toast" hidden></div>
+
+  <script type="importmap">
+  {
+    "imports": {
+      "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js"
+    }
+  }
+  </script>
+  <script type="module" src="js/globe.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>
