@@ -1,30 +1,21 @@
-# Červené Náradie — GitHub Pages demo
+# Červené Náradie
 
-Cleaner remake of [cervenenaradie.sk](https://www.cervenenaradie.sk/).
+Static remake of [cervenenaradie.sk](https://cervenenaradie.sk) with a custom night-Earth globe logo.
 
-## Live URL (after publish)
+## Live site (public)
 
-`https://<your-username>.github.io/cervenenaradie/`
+Anyone can open this URL:
 
-Or as a user site (repo named `<username>.github.io`):
+**https://redoxbite.github.io/cervenenaradie/**
 
-`https://<your-username>.github.io/`
+Also: https://redoxbite.com/cervenenaradie/
 
-## Run locally
+Repo: https://github.com/Redoxbite/cervenenaradie
 
-Open `index.html` in a browser, or serve the folder:
+## Local preview
 
 ```bash
-npx serve .
+npx --yes serve -l tcp://127.0.0.1:5173 .
 ```
 
-## Publish to GitHub Pages
-
-1. Create a new GitHub repo (e.g. `cervenenaradie`).
-2. Push this folder to `main`.
-3. In the repo: **Settings → Pages → Deploy from branch → `main` / `/ (root)`**.
-
-## What’s included
-
-- Cleaner homepage: hero carousel, brands, products, store, perks, footer
-- Brand colours kept: red `#E30613`, black, white
+Then open http://localhost:5173/
